@@ -19,9 +19,12 @@ const guns = [
 
 function readDB() {
   try {
-    return JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    const d = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    if (!d.accounts) d.accounts = {};
+    if (!Array.isArray(d.feedback)) d.feedback = [];
+    return d;
   } catch {
-    return { accounts: {} };
+    return { accounts: {}, feedback: [] };
   }
 }
 
@@ -159,8 +162,37 @@ const server = http.createServer(async (req, res) => {
 
       const a = authUser(req, db);
 
-      if (!a)
-        return json(res, 401, { error: 'Please login again' });
+      if (route === '/api/feedback' && req.method === 'GET') {
+        if (!a) return json(res, 401, { error: 'Please login' });
+        return json(res, 200, {
+          messages: (db.feedback || []).slice(-100).reverse()
+        });
+      }
+
+      if (route === '/api/feedback' && req.method === 'POST') {
+        if (!a) return json(res, 401, { error: 'Please login' });
+
+        const text = String(body.text || '').trim();
+        if (!text || text.length > 500)
+          return json(res, 400, { error: 'Message must be 1–500 characters' });
+
+        const m = {
+          id: crypto.randomUUID(),
+          gameId: a.gameId,
+          displayName: a.displayName,
+          text,
+          createdAt: new Date().toISOString()
+        };
+
+        db.feedback = db.feedback || [];
+        db.feedback.push(m);
+        db.feedback = db.feedback.slice(-500);
+        writeDB(db);
+
+        return json(res, 201, { message: m });
+      }
+
+      if (!a) return json(res, 401, { error: 'Please login again' });
 
       if (route === '/api/me' && req.method === 'GET')
         return json(res, 200, { user: safeUser(a) });
