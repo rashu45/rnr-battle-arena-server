@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>RNR Battle Arena</title>
+<link rel="stylesheet" href="style.css"></head><body>
+<section id="auth" class="screen"><div class="panel"><div class="brand">RNR BATTLE ARENA</div><p class="muted">Create your account or login. Your 5-digit Game ID is your permanent player identity.</p><div class="tabs"><button id="showLogin" class="active">LOGIN</button><button id="showRegister">CREATE ACCOUNT</button></div>
+<div id="loginBox"><input id="loginId" placeholder="5-digit Game ID (or username)"><input id="loginPass" type="password" placeholder="Password"><button id="loginBtn" style="width:100%">LOGIN</button></div>
+<div id="registerBox" class="hidden"><input id="regUser" placeholder="Username (3–16 letters/numbers/_)"><input id="regDisplay" placeholder="Display name"><input id="regPass" type="password" placeholder="Password (minimum 8 characters)"><button id="registerBtn" style="width:100%">CREATE ACCOUNT</button></div><p id="authMsg" class="muted"></p></div></section>
+<section id="app" class="screen hidden"><div class="panel" style="max-width:850px;margin:0 auto"><div class="topbar"><div><div class="brand">RNR BATTLE ARENA</div><div class="developerLine">DEVELOPED BY RASHAD</div><div class="muted">Battle Royale · Training Lobby</div></div><div class="row"><span class="pill" id="walletTop">🦅 0.00</span><button id="logout" class="danger">Logout</button></div></div>
+<button id="inviteFriends" class="secondary" style="width:100%;margin:10px 0">INVITE FRIENDS</button><div class="tabs"><button data-tab="lobby" class="active">LOBBY</button><button data-tab="profile">PROFILE</button><button data-tab="store">GUN STORE</button><button data-tab="inventory">INVENTORY</button><button data-tab="settings">SETTINGS</button><button data-tab="musicPage">MUSIC</button><button data-tab="feedbackPage">FEEDBACK</button></div>
+<div id="lobby" class="tabPage"><div class="tile" style="text-align:center;padding:24px;background:linear-gradient(140deg,#304a37,#18271d)"><div style="font-size:62px">🪖</div><div class="big" id="lobbyName">Soldier</div><p class="muted">3D Battle Lobby · India Zone</p><div class="grid"><div><span class="muted">GAME ID</span><div class="big" id="lobbyId">00000</div><button id="copyGameId" class="secondary" style="font-size:11px;padding:6px 10px">COPY GAME ID</button></div><div><span class="muted">EAGLE TOKENS</span><div class="big" id="lobbyTokens">0.00</div></div></div><button id="startModeBtn" style="width:100%;margin-top:14px;padding:16px;font-size:20px;border-radius:14px;background:linear-gradient(135deg,#398b53,#245d38)">▶ START</button>
+ <button id="musicOpen" class="secondary" style="width:100%;margin-top:10px">🎵 MY MUSIC</button><p class="muted">Training works on this device. Hotspot Match shows connected players only after the host server confirms their game connection.</p></div><div class="grid" style="margin-top:10px"><div class="tile"><b>Total Kills</b><span class="big" id="lobbyKills">0</span></div><div class="tile"><b>Owned Guns</b><span class="big" id="lobbyGuns">1</span></div></div></div>
+<div id="hotspotPage" class="tabPage hidden">
+ <div class="tile">
+  <div class="big">📶 HOTSPOT ROOM</div>
+  <p class="muted">Connect your phone and friends' phones to the same Wi-Fi hotspot, then open this game from the host server link.</p>
+  <div class="grid">
+   <div><span class="muted">NETWORK STATUS</span><div class="big" id="hotspotStatus">Not connected</div></div>
+   <div><span class="muted">CONNECTED PLAYERS</span><div class="big" id="hotspotCount">0</div></div>
+  </div>
+  <p class="muted">Automatic player discovery requires the RNR Host Server running on the hotspot owner’s phone. This browser page cannot scan Android hotspot devices by itself.</p>
+  <div id="hotspotPlayers" class="tile">No players confirmed yet.</div>
+  <div class="muted" id="hostRole">Host permission: waiting for server</div>
+  <button id="hostStartMatch" disabled style="width:100%;margin-top:12px">START MATCH (HOST ONLY)</button>
+  <p class="muted">Only a server-confirmed hotspot host can start the match. The browser cannot identify Android hotspot ownership by itself.</p>
+ </div>
+</div>
+<div id="musicPage" class="tabPage hidden">
+ <div class="tile">
+  <div class="big">🎵 GAME MUSIC</div>
+  <p class="muted">Choose audio files from your phone's gallery / music folder. Browsers require your permission before accessing local audio.</p>
+  <input id="musicFiles" type="file" accept="audio/*" multiple>
+  <div id="musicName" class="muted">No music selected</div>
+  <div class="row"><button id="musicPlay">PLAY</button><button id="musicPause" class="secondary">PAUSE</button><button id="musicStop" class="danger">STOP</button></div>
+  <label for="musicVolume">Volume</label><input id="musicVolume" type="range" min="0" max="1" step="0.05" value="0.65">
+  <audio id="gameAudio" loop></audio>
+ </div>
+</div>
+<div id="feedbackPage" class="tabPage hidden"><div class="tile"><div class="big">💬 PLAYER FEEDBACK</div><p class="muted">Messages posted here are visible to other signed-in players.</p><textarea id="feedbackText" maxlength="500" placeholder="Write feedback or a message..." style="width:100%;min-height:90px;padding:12px;border-radius:9px;background:#101b14;color:white;border:1px solid #536657"></textarea><button id="sendFeedback" style="width:100%;margin-top:8px">SEND FEEDBACK</button><div id="feedbackStatus" class="muted"></div></div><div class="tile" style="margin-top:10px"><b>PLAYER MESSAGES</b><div id="feedbackList" class="muted">Loading messages…</div></div></div>
+<div id="profile" class="tabPage hidden"><div class="row"><div class="avatar">🪖</div><div style="flex:1"><b id="profileUser">Player</b><div class="muted">Game ID: <span id="profileId"></span></div></div></div><label>Display name</label><input id="displayName"><label>Avatar emoji</label><input id="avatar" maxlength="8" placeholder="🪖"><button id="saveProfile">SAVE PROFILE</button><div class="grid"><div class="tile">Kills <div class="big" id="profileKills">0</div></div><div class="tile">Deaths <div class="big" id="profileDeaths">0</div></div><div class="tile">Eagle Tokens <div class="big" id="profileTokens">0.00</div></div><div class="tile">Game ID <div class="big" id="profileGameId">00000</div></div></div></div>
+<div id="store" class="tabPage hidden"><div class="row"><b>WEAPON STORE</b><span class="pill">🦅 <span id="storeTokens">0.00</span></span></div><p class="muted">Earn 0.50 Eagle Token for each confirmed player elimination in a live match.</p><div id="gunList" class="grid"></div></div>
+<div id="inventory" class="tabPage hidden"><b>MY INVENTORY</b><p class="muted">Equip a gun you have purchased.</p><div id="inventoryList" class="grid"></div></div>
+<div id="settings" class="tabPage hidden"><b>GAME SETTINGS</b><div class="tile" style="margin-top:10px"><label>Graphics Quality</label><select id="graphics"><option>Low</option><option selected>Medium</option><option>High</option><option>Ultra</option></select><label>Camera Sensitivity <span id="sensVal">50</span></label><input class="range" id="sensitivity" type="range" min="1" max="100" value="50"><label>Aim Sensitivity <span id="aimVal">45</span></label><input class="range" id="aimSensitivity" type="range" min="1" max="100" value="45"><label>Joystick Size</label><input class="range" id="joySize" type="range" min="80" max="160" value="120"><label>Fire Button Size</label><input class="range" id="fireSize" type="range" min="55" max="110" value="76"><label>Music Volume</label><input class="range" id="music" type="range" min="0" max="100" value="40"><label>Sound Volume</label><input class="range" id="sound" type="range" min="0" max="100" value="70"><label><input id="vibration" type="checkbox" style="width:auto"> Vibration (if supported)</label><button id="saveSettings" style="width:100%">SAVE SETTINGS</button><button id="resetSettings" class="secondary" style="width:100%">RESET CONTROLS</button></div><p class="muted">Settings are saved on this device. Account, tokens and purchases are saved by the host server.</p></div>
+<p id="appMsg" class="muted"></p></div></section>
+
+<div id="modePicker" class="hidden" role="dialog" aria-modal="true" aria-label="Choose game mode">
+ <div class="modeBox">
+  <div style="font-size:28px">⚔️</div>
+  <div class="big" style="font-size:24px">SELECT GAME MODE</div>
+  <p class="muted">Choose how you want to play</p>
+  <button id="trainingBtn" class="modeOption secondary">🎯 TRAINING MODE<small>Play solo with practice enemies</small></button>
+  <button id="hotspotBtn" class="modeOption">📶 HOTSPOT MATCH<small>Open the hotspot multiplayer lobby</small></button>
+  <button id="closeModePicker" class="modeClose">CANCEL</button>
+ </div>
+</div>
+
+<div id="notice" role="status" aria-live="polite"></div><div id="gameWrap" class="hidden"><canvas id="game"></canvas><div id="gameHud"><div id="gameTop"><span class="pill" id="teamBlue">BLUE 0</span><span class="pill" id="gameHp">HP 100</span><span class="pill" id="gameKill">KILLS 0</span><span class="pill" id="aliveCount">ALIVE 7</span><span class="pill" id="teamRed">RED 0</span></div><canvas id="mini" width="200" height="200"></canvas><button id="exitGame">EXIT</button><div id="netPanel"><b>NETWORK</b><div id="netStatus">Not connected</div><div id="netPlayers">Players: 0</div></div><div id="stick"><div id="nub"></div></div><span class="pill" id="ammo">AMMO ∞</span><button id="fire">FIRE</button><button id="aim">AIM</button><button id="jump">JUMP</button><button id="runBtn">RUN</button><button id="forwardBtn">FORWARD</button><div id="toast">Connecting…</div></div></div>
+<script src="script.js"></script>
+</body></html>
